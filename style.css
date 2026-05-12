@@ -1,0 +1,842 @@
+/* --- CSS STYLES --- */
+:root {
+    --folder-bg: #d4b88c;
+    --folder-dark: #b5986c;
+    --bg-color: #1a1a1a;
+    --text-dark: #222;
+    --stamp-red: #c41e3a;
+    --id-blue: #091631;
+    --typewriter: 'Courier New', Courier, monospace;
+    --sans-serif: 'Arial', sans-serif;
+}
+
+/* --- DECRYPTION LOADER --- */
+#loader-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #111;
+    z-index: 99999; /* Keeps it above absolutely everything */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.6s ease-out; /* Smooth fade when done */
+}
+
+.safe-dial-container {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+/* The spinning mechanical ring */
+.safe-dial-ring {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 4px dashed #666;
+    border-radius: 50%;
+    animation: spinDial 3s linear infinite;
+}
+
+/* The numbers inside the dial */
+.dial-number {
+    font-family: 'Special Elite', var(--typewriter);
+    font-size: 2.5rem;
+    color: #eab159; 
+    z-index: 2;
+    width: 100%;
+    text-align: center;
+    /* Optical nudge to compensate for the thin '1' whitespace */
+    transform: translateX(4px) translateY(3px); 
+}
+
+.loader-text {
+    font-family: 'Special Elite', var(--typewriter);
+    color: #888;
+    letter-spacing: 3px;
+    font-size: 0.9rem;
+    animation: pulseText 1.5s infinite;
+}
+
+/* Animations */
+@keyframes spinDial {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes pulseText {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+}
+
+body {
+    background-color: var(--bg-color);
+    background-image: radial-gradient(#333 1px, transparent 1px);
+    background-size: 20px 20px;
+    color: var(--text-dark);
+    font-family: var(--typewriter);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+}
+
+/* The Manila Folder Container */
+.dossier-container {
+    width: 100%;
+    max-width: 950px;
+    background-color: var(--folder-bg);
+    border-radius: 5px;
+    box-shadow: 10px 10px 30px rgba(0,0,0,0.7);
+    position: relative;
+    padding: 40px 40px 120px 40px; 
+    min-height: 550px; 
+}
+
+/* Folder Tabs (Colored Sticky-Note Dividers) */
+.tabs {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    width: 100%;
+    background: transparent;
+    padding: 10px 10px 0 10px;
+    box-sizing: border-box;
+    border-bottom: 1px solid rgba(0,0,0,0.15); 
+}
+
+/* Assigning a unique vintage sticky-note color to each tab */
+.tab-btn:nth-child(1) { --tab-bg: #eab159; } /* Mustard Yellow */
+.tab-btn:nth-child(2) { --tab-bg: #7fa3b0; } /* Dusty Blue */
+.tab-btn:nth-child(3) { --tab-bg: #cc7a7a; } /* Vintage Red */
+.tab-btn:nth-child(4) { --tab-bg: #8fa97c; } /* Sage Green */
+.tab-btn:nth-child(5) { --tab-bg: #d49266; } /* Burnt Orange */
+.tab-btn:nth-child(6) { --tab-bg: #a894a4; } /* Muted Plum */
+
+.tab-btn {
+    flex: 1;
+    padding: 10px 5px;
+    background: var(--tab-bg);
+    border: none;
+    border-radius: 8px 8px 0 0;
+    margin-right: 3px;
+    margin-top: 6px; 
+    font-family: var(--typewriter);
+    font-weight: bold;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.2s ease;
+    font-size: 0.8rem;
+    color: #111; /* Keeps text dark and readable */
+    
+    /* Makes inactive tabs look recessed and shadowed */
+    box-shadow: inset 0 -5px 10px rgba(0,0,0,0.2); 
+    filter: brightness(0.8); /* Darkens the color when inactive */
+}
+
+.tab-btn:hover {
+    filter: brightness(0.9); /* Slightly brightens on hover */
+}
+
+.tab-btn.active {
+    background: var(--tab-bg);
+    margin-top: 0; 
+    padding-top: 16px;
+    z-index: 2;
+    
+    /* Pops the active tab forward */
+    box-shadow: 2px -2px 8px rgba(0,0,0,0.15); 
+    filter: brightness(1); /* Full vibrant color when clicked */
+    margin-bottom: -1px; /* Pulls it down slightly to overlap the folder line */
+}
+
+/* Frames */
+/* --- PHYSICAL PAPER PAGES --- */
+.frame {
+    display: none;
+    margin-top: 20px; /* Pulls the paper closer to the tabs */
+    padding: 40px;
+    background-color: #fdfaf6; /* Classic off-white paper color */
+    border-radius: 2px 8px 8px 8px; /* Slightly rounded right corners */
+    box-shadow: 2px 5px 15px rgba(0,0,0,0.15); /* Drop shadow on the folder */
+    border: 1px solid rgba(0,0,0,0.05);
+    animation: fadeIn 0.4s ease-in-out;
+    min-height: 600px; /* Keeps pages a consistent height */
+    position: relative;
+}
+
+.frame.active {
+    display: block;
+}
+
+/* --- THE OFFICIAL PAGE STAMP --- */
+    .frame::after {
+        content: 'TOP SECRET // CLEARED'; /* You can change this text! */
+        position: absolute;
+        bottom: 40px;
+        right: 40px;
+        color: #c41e3a;
+        font-family: 'Special Elite', var(--typewriter);
+        font-size: clamp(1.2rem, 3vw, 1.8rem); /* Responsive sizing */
+        font-weight: bold;
+        border: 4px solid #c41e3a;
+        padding: 5px 15px;
+        transform: rotate(-4deg);
+        opacity: 0.6; /* Fades the ink slightly */
+        
+        /* The Magic Trick: Makes it look like real ink soaking into the paper lines */
+        mix-blend-mode: multiply; 
+        
+        pointer-events: none; /* Stops the stamp from blocking clicks */
+        z-index: 10;
+    }
+
+    /* Tweak for the dark Exhibits page so the stamp remains visible */
+    #evidence::after {
+        color: #ff4d4d;
+        border-color: #ff4d4d;
+        mix-blend-mode: normal; /* Multiply doesn't work on dark paper */
+        opacity: 0.8;
+    }
+
+/* 1. Case File (Home): Plain Vintage Paper */
+#home {
+    background-color: #fdfaf6;
+    /* Just plain paper, letting the text breathe */
+}
+
+/* 2. Operations: Lined Notebook Paper */
+#operations {
+    background-color: #fff;
+    /* Creates a red margin line and repeating blue horizontal lines */
+    background-image: 
+        linear-gradient(#f49595 2px, transparent 2px), 
+        repeating-linear-gradient(transparent, transparent 28px, #91d2fa 28px, #91d2fa 29px);
+    background-position: 40px 0, 0 30px; /* Positions the red line */
+    background-size: 100% 100%, 100% 29px;
+    background-repeat: no-repeat, repeat;
+    padding-left: 60px; /* Pushes text past the red margin */
+}
+
+/* 3. Training & Skills: Blueprint / Graph Paper */
+#training {
+    background-color: #f0f7fb; /* Very pale blue base */
+    /* Creates intersecting horizontal and vertical lines */
+    background-image: 
+        linear-gradient(rgba(145, 210, 250, 0.5) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(145, 210, 250, 0.5) 1px, transparent 1px);
+    background-size: 20px 20px; /* Size of the grid squares */
+}
+
+/* 4. Comm Link (Login): Dotted Bullet Journal */
+#login {
+    background-color: #fff;
+    /* Creates tiny repeating dots */
+    background-image: radial-gradient(#ccc 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+/* 5. Asset Rates: Yellow Legal Pad */
+#catalogues {
+    background-color: #fdf0a6; /* Legal pad yellow */
+    /* Creates a double red margin and blue lines */
+    background-image: 
+        linear-gradient(90deg, transparent 40px, #e87b7b 40px, #e87b7b 41px, transparent 41px, transparent 45px, #e87b7b 45px, #e87b7b 46px, transparent 46px), 
+        repeating-linear-gradient(transparent, transparent 28px, #91d2fa 28px, #91d2fa 29px);
+    background-size: 100% 100%, 100% 29px;
+    padding-left: 70px;
+}
+
+/* 6. Exhibits: Dark Photo Mat / Bristol Board */
+#evidence {
+    background-color: #2a2a2a; /* Dark background makes photos pop */
+    color: #eee; /* Light text for the dark page */
+    background-image: radial-gradient(#333 1px, transparent 1px);
+    background-size: 10px 10px;
+}
+
+/* Adjustments for the dark Exhibits page */
+#evidence h2, #evidence p {
+    border-bottom-color: #555;
+}
+
+/* Optional: A piece of tape holding the top left of every page */
+.frame::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    width: 60px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(0,0,0,0.05);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    transform: rotate(-15deg);
+    z-index: 10;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Typography & Elements */
+h1, h2, h3 {
+    border-bottom: 2px solid var(--text-dark);
+    padding-bottom: 5px;
+    text-transform: uppercase;
+}
+
+.redacted {
+    background-color: var(--text-dark);
+    color: var(--text-dark);
+    padding: 0 5px;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.redacted:hover {
+    color: #fff;
+}
+
+/* Forms */
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+input[type="text"], input[type="email"], input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    background: transparent;
+    border: none;
+    border-bottom: 2px dashed var(--text-dark);
+    font-family: var(--typewriter);
+    font-size: 1rem;
+    outline: none;
+}
+
+button.submit-btn {
+    background-color: var(--text-dark);
+    color: var(--folder-bg);
+    padding: 10px 20px;
+    border: none;
+    font-family: var(--typewriter);
+    font-weight: bold;
+    cursor: pointer;
+    text-transform: uppercase;
+    margin-top: 10px;
+}
+
+button.submit-btn:hover {
+    background-color: var(--stamp-red);
+    color: white;
+}
+
+.error-msg {
+    color: var(--stamp-red);
+    font-size: 0.8rem;
+    display: none;
+    margin-top: 5px;
+    font-weight: bold;
+}
+
+/* Tables for Rates/Skills */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    border: 1px solid var(--text-dark);
+    padding: 12px;
+    text-align: left;
+}
+
+th {
+    background-color: rgba(0,0,0,0.1);
+}
+
+/* --- REDESIGNED ID CARD --- */
+.case-file-layout {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+}
+
+.text-content {
+    flex: 1;
+}
+
+.id-badge {
+    width: 320px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 2px 5px 15px rgba(0,0,0,0.3);
+    font-family: 'Special Elite', var(--typewriter);
+    border: 1px solid #ccc;
+    overflow: hidden;
+    transform: rotate(2deg);
+    position: relative;
+}
+
+/* Tape effect holding the ID */
+.id-badge::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-3deg);
+    width: 100px;
+    height: 25px;
+    background: rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(0,0,0,0.1);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    z-index: 10;
+}
+
+.id-header {
+    background-color: var(--id-blue);
+    color: white;
+    text-align: center;
+    padding: 15px 10px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    line-height: 1.3;
+}
+
+.id-header span {
+    display: block;
+    font-size: 1rem;
+    margin-bottom: 3px;
+}
+
+.id-body {
+    padding: 15px;
+    display: flex;
+    gap: 15px;
+}
+
+.id-photo-container {
+    width: 90px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.id-photo {
+    width: 80px;
+    height: 100px;
+    border: 1px solid #999;
+    background-color: #eee;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.6rem;
+    color: #666;
+    text-align: center;
+    padding: 5px;
+}
+
+.id-photo {
+    width: 80px;
+    height: 100px;
+    border: 1px solid #999;
+    background-color: #eee;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* This is the magic lock: it hides anything that tries to spill out */
+    padding: 0; /* Removed padding so the image touches the borders */
+}
+
+/* Add this brand new rule right below .id-photo */
+.id-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* This makes the image fill the box without squishing or distorting */
+}
+
+.id-signature {
+    margin-top: 10px;
+    border-top: 1px solid #333;
+    width: 100%;
+    text-align: center;
+    font-size: 0.6rem;
+    padding-top: 2px;
+    font-family: 'Special Elite', var(--typewriter);
+    font-size: 0.8rem;
+    color: #111; 
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.id-details {
+    flex: 1;
+    font-size: 0.7rem;
+    color: #111;
+}
+
+.id-details p {
+    margin: 0 0 6px 0;
+    display: flex;
+}
+
+.id-details span.label {
+    font-weight: bold;
+    width: 80px;
+    flex-shrink: 0;
+}
+
+.id-footer {
+    background: #f4f4f4;
+    border-top: 1px solid #ddd;
+    padding: 5px 15px;
+    font-size: 0.65rem;
+    color: var(--id-blue);
+    font-weight: bold;
+}
+
+/* --- EVIDENCE BOARD CATALOGUE (UPGRADED) --- */
+.evidence-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 30px;
+    margin-top: 20px;
+    padding: 20px;
+}
+
+.polaroid {
+    perspective: 1000px; /* Enables 3D space */
+    height: 280px; /* Fixed height so the flip works */
+    position: relative;
+    cursor: pointer;
+    z-index: 1;
+}
+
+/* Scatters the photos */
+.polaroid:nth-child(even) { transform: rotate(3deg); }
+.polaroid:nth-child(odd) { transform: rotate(-2deg); }
+.polaroid:nth-child(3n) { transform: rotate(-4deg); }
+.polaroid:nth-child(4n) { transform: rotate(4deg); }
+
+.polaroid-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s ease;
+    transform-style: preserve-3d; /* Keeps front and back together */
+}
+
+/* The Flip Action */
+.polaroid.flipped .polaroid-inner {
+    transform: rotateY(180deg) scale(1.1);
+    z-index: 10;
+}
+
+.polaroid:hover:not(.flipped) .polaroid-inner {
+    transform: scale(1.05); /* Gentle hover before flip */
+}
+
+.polaroid-front, .polaroid-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    background: #fff;
+    box-shadow: 3px 5px 15px rgba(0,0,0,0.4);
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    padding: 10px;
+}
+
+/* Tape applied to both sides */
+.polaroid-front::before, .polaroid-back::before {
+    content: '';
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-4deg);
+    width: 80px;
+    height: 25px;
+    background: rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(0,0,0,0.1);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    z-index: 2;
+}
+
+/* Front specific */
+.polaroid-front img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover; /* Crops thumbnail to fit perfectly */
+    border: 1px solid #ddd;
+    cursor: zoom-in; /* Changes mouse to magnifying glass over the photo */
+    position: relative;
+    z-index: 5;
+}
+
+.polaroid-caption {
+    position: absolute;
+    bottom: 15px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-family: 'Special Elite', var(--typewriter);
+    font-size: 0.85rem;
+    color: #111;
+}
+
+/* Back specific */
+.polaroid-back {
+    transform: rotateY(180deg);
+    background: #fdfaf6; /* Slightly aged paper color */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    font-family: 'Special Elite', var(--typewriter);
+}
+
+.polaroid-back h4 {
+    margin: 0 0 10px 0;
+    color: var(--stamp-red);
+    font-size: 1.1rem;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 5px;
+}
+
+.polaroid-back p {
+    font-size: 0.8rem;
+    line-height: 1.4;
+    color: #333;
+}
+
+/* --- LIGHTBOX MODAL --- */
+.evidence-modal {
+    display: none; 
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.85); /* Dark overlay */
+    backdrop-filter: blur(5px);
+    justify-content: center;
+    align-items: center;
+    cursor: zoom-out;
+}
+
+.evidence-modal img {
+    max-width: 90vw;
+    max-height: 90vh;
+    object-fit: contain; /* Shows FULL image uncropped */
+    border: 5px solid #fff;
+    box-shadow: 0 0 30px rgba(0,0,0,0.8);
+    animation: zoomIn 0.3s ease;
+}
+
+@keyframes zoomIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+/* --- 3D FOLDER COVER --- */
+.perspective-wrapper {
+    perspective: 2000px; /* Gives the 3D flip depth */
+    width: 100%;
+    max-width: 950px;
+    position: relative;
+}
+
+#folder-cover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #c4a473; /* Manila folder color */
+    border-radius: 0 8px 8px 0;
+    z-index: 100;
+    /* The Hinge */
+    transform-origin: left center; 
+    transition: transform 1s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 0.8s ease 0.3s;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 10px 10px 30px rgba(0,0,0,0.7);
+    border-left: 30px solid #a38255; /* The dark folded spine */
+}
+
+/* The top cut-out tab of the cover */
+#folder-cover::before {
+    content: '';
+    position: absolute;
+    top: -18px;
+    right: 40px;
+    width: 180px;
+    height: 20px;
+    background-color: #c4a473;
+    border-radius: 8px 8px 0 0;
+}
+
+/* The Animation Class added via JS */
+#folder-cover.opened {
+    transform: rotateY(-110deg); /* Swings it open to the left */
+    opacity: 0; /* Fades out so you can click the inside */
+    pointer-events: none; /* Disables clicks on the invisible cover */
+}
+
+/* Cover Typography */
+.cover-text {
+    text-align: center;
+    color: #1a1a1a;
+    font-family: 'Special Elite', var(--typewriter); /* Using your typewriter font */
+    transform: rotate(-2deg); /* Slight messy tilt */
+}
+
+.cover-text h1 {
+    font-size: clamp(3rem, 8vw, 5rem);
+    margin: 10px 0;
+    border-bottom: none;
+    letter-spacing: 2px;
+    font-weight: normal;
+}
+
+.cover-text .vol {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    letter-spacing: 3px;
+}
+
+.cover-text .sub {
+    font-size: 1.5rem;
+    font-weight: bold;
+    border-top: 2px solid #1a1a1a;
+    border-bottom: 2px solid #1a1a1a;
+    display: inline-block;
+    padding: 5px 20px;
+    margin-top: 10px;
+}
+
+.cover-text .agency {
+    margin-top: 120px;
+    font-size: 0.9rem;
+    opacity: 0.6;
+    letter-spacing: 1px;
+}
+
+/* Mobile Device Adjustments */
+@media (max-width: 768px) {
+    /* Fixes the ID card squishing the text */
+    .case-file-layout {
+        flex-direction: column;
+        align-items: center; /* Centers the ID card */
+    }
+    
+    .text-content {
+        order: 2; /* Forces text to the bottom */
+        width: 100%;
+    }
+    
+    .id-badge {
+        order: 1; /* Forces ID card to the top */
+        margin-bottom: 30px; /* Adds breathing room below the card */
+        transform: rotate(0deg); /* Removes the tilt on mobile so it fits better */
+    }
+    
+    /* Keeps tabs functional on mobile */
+    .tabs {
+        flex-wrap: wrap; 
+        padding: 0;
+    }
+    .tab-btn {
+        flex: 1 1 45%; 
+        margin-top: 0;
+        border-radius: 8px 8px 0 0;
+    }
+    .tab-btn.active {
+        padding-top: 8px;
+    }
+
+    /* --- Mobile Cover Adjustments --- */
+    #folder-cover {
+        border-left-width: 15px; /* Thinner spine so it doesn't eat up screen space */
+    }
+
+    #folder-cover::before {
+        width: 120px; /* Shrinks the top cut-out tab */
+        right: 20px;
+        top: -15px;
+        height: 15px;
+    }
+
+    .cover-text h1 {
+        font-size: 2.5rem; /* Prevents the main title from wrapping awkwardly */
+    }
+
+    .cover-text .sub {
+        font-size: 1.1rem;
+        padding: 5px 10px;
+    }
+
+    .cover-text .agency {
+        margin-top: 60px; /* Halves the massive gap so it fits on short phone screens */
+        font-size: 0.75rem;
+        padding: 0 15px; /* Keeps text from touching the absolute edges */
+    }
+    
+    /* Push the frames down further on mobile because tabs wrap to two lines */
+    .frame {
+        margin-top: 100px;
+    }
+
+    /* --- Mobile Layout Fixes --- */
+    /* 1. Stop tables from bursting out of the paper */
+    table {
+        display: block;
+        overflow-x: auto; /* Allows horizontal scrolling if it's too wide */
+        font-size: 0.85rem; /* Shrinks the table text slightly */
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    /* 2. Reposition and shrink the page stamp */
+    .frame::after {
+        font-size: 1rem; /* Smaller font for small screens */
+        bottom: 20px; /* Tucks it closer to the bottom edge */
+        right: 10px; /* Tucks it closer to the right edge */
+        border-width: 2px; /* Thinner border */
+        padding: 3px 10px;
+    }
+
+    /* 3. Adjust mobile paper padding to ensure there's a safe zone */
+    .frame {
+        padding: 30px 20px 90px 20px; /* Top, Right, Bottom (90px safe zone), Left */
+    }
+}
