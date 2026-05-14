@@ -1,4 +1,4 @@
-/* --- CSS STYLES --- */
+/* CSS STYLES */
 :root {
     --folder-bg: #d4b88c;
     --folder-dark: #b5986c;
@@ -10,75 +10,105 @@
     --sans-serif: 'Arial', sans-serif;
 }
 
-/* --- DECRYPTION LOADER --- */
-#loader-screen {
+/* FOLDER DROP */
+#falling-intro {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: #111;
-    z-index: 99999; /* Keeps it above absolutely everything */
+    background-color: #111; 
+    z-index: 99999;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    transition: opacity 0.6s ease-out; /* Smooth fade when done */
+    transition: opacity 0.8s ease; 
 }
 
-.safe-dial-container {
+#dropped-folder {
+    width: 180px;
+    height: 250px;
+    background-color: #c4a473;
+    border-radius: 4px;
+    box-shadow: 15px 25px 40px rgba(0,0,0,0.8);
     position: relative;
-    width: 120px;
-    height: 120px;
+    cursor: pointer;
+    border-left: 12px solid #a38255; 
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 20px;
+
+    animation: dropIn 0.9s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    transition: transform 0.7s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 0.5s ease 0.2s;
 }
 
-/* The spinning mechanical ring */
-.safe-dial-ring {
+#dropped-folder::before {
+    content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: 4px dashed #666;
-    border-radius: 50%;
-    animation: spinDial 3s linear infinite;
+    top: -12px;
+    right: 15px;
+    width: 70px;
+    height: 12px;
+    background-color: #c4a473;
+    border-radius: 4px 4px 0 0;
 }
 
-/* The numbers inside the dial */
-.dial-number {
+.folder-stamp {
     font-family: 'Special Elite', var(--typewriter);
-    font-size: 2.5rem;
-    color: #eab159; 
-    z-index: 2;
-    width: 100%;
-    text-align: center;
-    /* Optical nudge to compensate for the thin '1' whitespace */
-    transform: translateX(4px) translateY(3px); 
+    color: #c41e3a;
+    font-size: 1.5rem;
+    font-weight: bold;
+    border: 3px solid #c41e3a;
+    padding: 5px 10px;
+    transform: rotate(-15deg);
+    opacity: 0.7;
+    mix-blend-mode: multiply;
 }
 
-.loader-text {
+.intro-hint {
+    color: #555;
     font-family: 'Special Elite', var(--typewriter);
-    color: #888;
+    letter-spacing: 4px;
+    margin-bottom: 50px;
+    opacity: 0;
+    animation: fadeIn 1s forwards 0.5s;
+}
+
+.click-hint {
+    color: #eab159;
+    font-family: 'Special Elite', var(--typewriter);
     letter-spacing: 3px;
-    font-size: 0.9rem;
-    animation: pulseText 1.5s infinite;
+    margin-top: 50px;
+    opacity: 0;
+    animation: pulseBlink 1.5s infinite 1.5s; 
+    cursor: pointer;
 }
 
-/* Animations */
-@keyframes spinDial {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+#dropped-folder.morphing {
+    transform: scale(6) rotate(0deg) translateY(10px); 
+    opacity: 0; 
+    pointer-events: none;
 }
 
-@keyframes pulseText {
-    0%, 100% { opacity: 0.4; }
+@keyframes dropIn {
+    0% { transform: translateY(-100vh) rotate(-30deg) scale(0.8); }
+    60% { transform: translateY(0) rotate(12deg) scale(1); } 
+    75% { transform: translateY(-30px) rotate(-5deg) scale(1); } 
+    90% { transform: translateY(0) rotate(8deg) scale(1); }
+    100% { transform: translateY(0) rotate(6deg) scale(1); } 
+}
+
+@keyframes fadeIn {
+    to { opacity: 1; }
+}
+
+@keyframes pulseBlink {
+    0%, 100% { opacity: 0.2; }
     50% { opacity: 1; }
 }
 
+/* BODY */
 body {
     background-color: var(--bg-color);
     background-image: radial-gradient(#333 1px, transparent 1px);
@@ -93,7 +123,7 @@ body {
     padding: 20px;
 }
 
-/* The Manila Folder Container */
+/* Manila Folder Container */
 .dossier-container {
     width: 100%;
     max-width: 950px;
@@ -140,15 +170,13 @@ body {
     text-transform: uppercase;
     transition: all 0.2s ease;
     font-size: 0.8rem;
-    color: #111; /* Keeps text dark and readable */
-    
-    /* Makes inactive tabs look recessed and shadowed */
+    color: #111; 
     box-shadow: inset 0 -5px 10px rgba(0,0,0,0.2); 
-    filter: brightness(0.8); /* Darkens the color when inactive */
+    filter: brightness(0.8); 
 }
 
 .tab-btn:hover {
-    filter: brightness(0.9); /* Slightly brightens on hover */
+    filter: brightness(0.9); 
 }
 
 .tab-btn.active {
@@ -156,25 +184,22 @@ body {
     margin-top: 0; 
     padding-top: 16px;
     z-index: 2;
-    
-    /* Pops the active tab forward */
     box-shadow: 2px -2px 8px rgba(0,0,0,0.15); 
-    filter: brightness(1); /* Full vibrant color when clicked */
-    margin-bottom: -1px; /* Pulls it down slightly to overlap the folder line */
+    filter: brightness(1); 
+    margin-bottom: -1px; 
 }
 
-/* Frames */
 /* --- PHYSICAL PAPER PAGES --- */
 .frame {
     display: none;
-    margin-top: 20px; /* Pulls the paper closer to the tabs */
+    margin-top: 20px; 
     padding: 40px;
-    background-color: #fdfaf6; /* Classic off-white paper color */
-    border-radius: 2px 8px 8px 8px; /* Slightly rounded right corners */
-    box-shadow: 2px 5px 15px rgba(0,0,0,0.15); /* Drop shadow on the folder */
+    background-color: #fdfaf6; 
+    border-radius: 2px 8px 8px 8px; 
+    box-shadow: 2px 5px 15px rgba(0,0,0,0.15); 
     border: 1px solid rgba(0,0,0,0.05);
     animation: fadeIn 0.4s ease-in-out;
-    min-height: 600px; /* Keeps pages a consistent height */
+    min-height: 600px; 
     position: relative;
 }
 
