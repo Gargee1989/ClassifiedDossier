@@ -1,34 +1,25 @@
-// --- Decryption Loader Logic ---
-document.addEventListener("DOMContentLoaded", () => {
-    let count = 0;
-    const counterElement = document.getElementById('load-counter');
-    const loaderScreen = document.getElementById('loader-screen');
-    
-    // The mechanical ticking interval
-    let tick = setInterval(() => {
-        // Adds a random number between 1 and 3 to make the counting feel mechanical/stuttery
-        count += Math.floor(Math.random() * 3) + 1; 
+// --- Falling Folder Morph Logic ---
+function morphFolder() {
+    const droppedFolder = document.getElementById('dropped-folder');
+    const introScreen = document.getElementById('falling-intro');
+    const hints = document.querySelectorAll('.intro-hint, .click-hint');
+
+    // 1. Instantly hide the text hints so they don't distract from the morph
+    hints.forEach(hint => hint.style.opacity = '0');
+
+    // 2. Trigger the CSS morph animation (scales up and rotates to camera)
+    droppedFolder.classList.add('morphing');
+
+    // 3. Wait for the folder to scale up, then fade out the black floor screen
+    setTimeout(() => {
+        introScreen.style.opacity = '0';
         
-        if (count >= 100) {
-            count = 100;
-            clearInterval(tick);
-            counterElement.innerText = count;
-            
-            // Wait a split second at 100, then fade out
-            setTimeout(() => {
-                loaderScreen.style.opacity = '0'; // Triggers the CSS fade
-                
-                // Once faded, remove it completely so it doesn't block clicks
-                setTimeout(() => {
-                    loaderScreen.style.display = 'none';
-                }, 600); 
-            }, 400); 
-        } else {
-            // Adds a leading zero to single digits (01, 09, etc)
-            counterElement.innerText = count.toString().padStart(2, '0');
-        }
-    }, 35); // Speed of the tick (lower is faster)
-});
+        // Remove it entirely from the DOM so you can click the real folder underneath
+        setTimeout(() => {
+            introScreen.style.display = 'none';
+        }, 800); 
+    }, 300); // 300ms delay perfectly blends the scale up with the fade out
+}
 
  // Frame Navigation Logic
 function switchFrame(frameId) {
