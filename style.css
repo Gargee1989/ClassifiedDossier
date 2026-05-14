@@ -1,4 +1,4 @@
-/* CSS STYLES */
+/* --- CSS STYLES --- */
 :root {
     --folder-bg: #d4b88c;
     --folder-dark: #b5986c;
@@ -10,39 +10,44 @@
     --sans-serif: 'Arial', sans-serif;
 }
 
-/* FOLDER DROP */
+/* --- FALLING FOLDER INTRO --- */
 #falling-intro {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: #111; 
+    background-color: #111; /* The dark floor */
     z-index: 99999;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    transition: opacity 0.8s ease; 
+    transition: opacity 0.8s ease; /* For fading out the floor */
 }
 
+/* The physical dropping folder */
 #dropped-folder {
     width: 180px;
     height: 250px;
-    background-color: #c4a473;
+    background-color: #c4a473; /* Matches your manila cover */
     border-radius: 4px;
     box-shadow: 15px 25px 40px rgba(0,0,0,0.8);
     position: relative;
     cursor: pointer;
-    border-left: 12px solid #a38255; 
+    border-left: 12px solid #a38255; /* The spine */
     display: flex;
     justify-content: center;
     align-items: center;
-
+    
+    /* The drop physics */
     animation: dropIn 0.9s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    
+    /* The smooth morph transition for the click */
     transition: transform 0.7s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 0.5s ease 0.2s;
 }
 
+/* The top cutout tab of the mini folder */
 #dropped-folder::before {
     content: '';
     position: absolute;
@@ -66,6 +71,7 @@
     mix-blend-mode: multiply;
 }
 
+/* Typography for the intro screen */
 .intro-hint {
     color: #555;
     font-family: 'Special Elite', var(--typewriter);
@@ -76,27 +82,30 @@
 }
 
 .click-hint {
-    color: #eab159;
+    color: #eab159; /* Vintage terminal yellow */
     font-family: 'Special Elite', var(--typewriter);
     letter-spacing: 3px;
     margin-top: 50px;
     opacity: 0;
-    animation: pulseBlink 1.5s infinite 1.5s; 
+    animation: pulseBlink 1.5s infinite 1.5s; /* Waits for the folder to drop, then flashes */
     cursor: pointer;
 }
 
+/* --- THE MORPH STATE (Triggered via JS) --- */
 #dropped-folder.morphing {
+    /* Zooms rapidly into the camera and straightens out */
     transform: scale(6) rotate(0deg) translateY(10px); 
     opacity: 0; 
     pointer-events: none;
 }
 
+/* --- ANIMATION KEYFRAMES --- */
 @keyframes dropIn {
     0% { transform: translateY(-100vh) rotate(-30deg) scale(0.8); }
-    60% { transform: translateY(0) rotate(12deg) scale(1); } 
-    75% { transform: translateY(-30px) rotate(-5deg) scale(1); } 
-    90% { transform: translateY(0) rotate(8deg) scale(1); }
-    100% { transform: translateY(0) rotate(6deg) scale(1); } 
+    60% { transform: translateY(0) rotate(12deg) scale(1); } /* Hits the floor */
+    75% { transform: translateY(-30px) rotate(-5deg) scale(1); } /* Rebounds */
+    90% { transform: translateY(0) rotate(8deg) scale(1); } /* Hits again */
+    100% { transform: translateY(0) rotate(6deg) scale(1); } /* Settles */
 }
 
 @keyframes fadeIn {
@@ -108,7 +117,6 @@
     50% { opacity: 1; }
 }
 
-/* BODY */
 body {
     background-color: var(--bg-color);
     background-image: radial-gradient(#333 1px, transparent 1px);
@@ -123,7 +131,7 @@ body {
     padding: 20px;
 }
 
-/* Manila Folder Container */
+/* The Manila Folder Container */
 .dossier-container {
     width: 100%;
     max-width: 950px;
@@ -170,13 +178,15 @@ body {
     text-transform: uppercase;
     transition: all 0.2s ease;
     font-size: 0.8rem;
-    color: #111; 
+    color: #111; /* Keeps text dark and readable */
+    
+    /* Makes inactive tabs look recessed and shadowed */
     box-shadow: inset 0 -5px 10px rgba(0,0,0,0.2); 
-    filter: brightness(0.8); 
+    filter: brightness(0.8); /* Darkens the color when inactive */
 }
 
 .tab-btn:hover {
-    filter: brightness(0.9); 
+    filter: brightness(0.9); /* Slightly brightens on hover */
 }
 
 .tab-btn.active {
@@ -184,22 +194,25 @@ body {
     margin-top: 0; 
     padding-top: 16px;
     z-index: 2;
+    
+    /* Pops the active tab forward */
     box-shadow: 2px -2px 8px rgba(0,0,0,0.15); 
-    filter: brightness(1); 
-    margin-bottom: -1px; 
+    filter: brightness(1); /* Full vibrant color when clicked */
+    margin-bottom: -1px; /* Pulls it down slightly to overlap the folder line */
 }
 
+/* Frames */
 /* --- PHYSICAL PAPER PAGES --- */
 .frame {
     display: none;
-    margin-top: 20px; 
+    margin-top: 20px; /* Pulls the paper closer to the tabs */
     padding: 40px;
-    background-color: #fdfaf6; 
-    border-radius: 2px 8px 8px 8px; 
-    box-shadow: 2px 5px 15px rgba(0,0,0,0.15); 
+    background-color: #fdfaf6; /* Classic off-white paper color */
+    border-radius: 2px 8px 8px 8px; /* Slightly rounded right corners */
+    box-shadow: 2px 5px 15px rgba(0,0,0,0.15); /* Drop shadow on the folder */
     border: 1px solid rgba(0,0,0,0.05);
     animation: fadeIn 0.4s ease-in-out;
-    min-height: 600px; 
+    min-height: 600px; /* Keeps pages a consistent height */
     position: relative;
 }
 
